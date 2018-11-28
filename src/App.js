@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Header from './components/header';
 import TodoInput from './components/todoInput';
+import TodoItem from './components/todoItem';
 
 class App extends Component {
   constructor(props) {
@@ -9,9 +10,9 @@ class App extends Component {
 
     this.state = {
       todos: [
-        { id: 0, text: "Make dinner tonight!" },
-        { id: 1, text: "Fold the laundry." },
-        { id: 2, text: "Learn to make a React app!" }
+        { id: 0, text: "First" },
+        { id: 1, text: "Second" },
+        { id: 2, text: "Third" }
       ],
       nextId: 3
     }
@@ -19,7 +20,18 @@ class App extends Component {
     this.removeTodo = this.removeTodo.bind(this);
   }
   addTodo(todoText) {
-    console.log("Todo added; ", todoText);
+    let todos = this.state.todos.slice();
+    todos.push({id: this.state.nextId,text: todoText});
+    this.setState({
+      todos: todos,
+      next:todos,
+      nextId: ++this.state.nextId
+    });
+  }
+  removeTodo(id){
+    this.setState({
+      todos: this.state.todos.filter((todo, index)=>todo.id !==id)
+    })
   }
 
   render() {
@@ -28,6 +40,13 @@ class App extends Component {
         <div className="todo-wrapper">
           <Header />
           <TodoInput todoText="" addTodo={this.addTodo} />
+          <ul>
+            {
+              this.state.todos.map((todo)=>{
+                return <TodoItem todo={todo} key={todo.id} id={todo.id} removeTodo={this.removeTodo}/>
+              })
+            }
+          </ul>
         </div>
       </div>
     );
